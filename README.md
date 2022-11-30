@@ -15,7 +15,7 @@ Millennio was tightly coupled to our specific school. Initially, I never planned
 - Display of the list of people enrolled in the configured courses
 - Quick retrieval of class schedule
 
-# Installation
+## Installation
 
 ```
 git clone https://github.com/mzacuna/millennio.git
