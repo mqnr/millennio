@@ -1,12 +1,12 @@
 # Millennio
 
-Millennio is a Discord bot for school-related purposes. Namely, it made it easy for me and my friends to extract Zoom meeting URLs from event descriptions in our schedules. Previously, this was a task we did manually, for every single class. These meeting links would frequently change; as a result, this was something we needed to repeat several times a day, much to our chagrin.
+Millennio is a Discord bot for school-related purposes. Most notably, it automated the extraction of Zoom meeting URLs from event descriptions in our Canvas schedules--which was a consistently tedious daily task during our online classes in the pandemic.
 
-After the development of the bot, meeting URLs would instead be sent automatically at their starting time to a Discord channel, pinging all of us. Millennio makes this easy: the schedule is configured through a single map object that establishes relationships between cronstrings and the events they are to trigger. The bot was a great time-saver for all of us, serving us well during two semesters. 
+After developing the bot, meeting URLs would be sent at their appropiate time to a Discord channel, pinging all of us. It was a great time-saver and served us well throughout two semesters. 
 
-## Removed names
+## Removed (and re-added) names
 
-Millennio was tightly coupled to our specific school. Initially, I never planned on publishing it on GitHub. However, I decided it was worthwhile to archive it, since it was one of my first software projects after I learned to program. Before publishing, I stripped out all names associated with our school. A cursory search of the `src` folder indicates 327 instances of this. Therefore, it is in an entirely unrunnable state. Someone else getting it to work for another school would be a time-consuming undertaking requiring a thorough read of the source code. Generalizing the code so that it could work with any school would be an even more effortful endeavor. I likely would have done this myself, had I used the program for another semester, but I have already graduated high school. The code is, then, only provided as an archive.
+When first pushing this to GitHub back in 2022, I stripped out all names that could lead back to our high school (such as function names with the name on it and such), likely out of an abundance of caution. Looking back, it's kind of silly opsec, so I undid all that.
 
 ## Feature overview
 
