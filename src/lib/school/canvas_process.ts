@@ -30,7 +30,7 @@ export async function canvasProcess(
 ): Promise<any> {
   const c = new CanvasClient(
     config.school.canvas_base_url,
-    config.secrets.canvasTokenRemovedgroup1
+    config.secrets.canvasToken603
   );
 
   switch (msgArray[0]) {
@@ -41,7 +41,7 @@ export async function canvasProcess(
 
       let courseId: string;
       try {
-        courseId = resolveCourseToId('removedgroup', msgArray.slice(1).join());
+        courseId = resolveCourseToId('603', msgArray.slice(1).join());
       } catch (e) {
         return msg.reply('No course matched that name.');
       }
@@ -141,7 +141,7 @@ export async function canvasProcess(
 
       let courseId: string;
       try {
-        courseId = resolveCourseToId('removedgroup', msgArray[1]);
+        courseId = resolveCourseToId('603', msgArray[1]);
       } catch (e) {
         return msg.reply('No course matched that name.');
       }

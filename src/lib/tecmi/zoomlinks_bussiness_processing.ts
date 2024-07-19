@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns';
 import { LegacyCanvasClient } from '../canvas/legacy_canvas_client';
 import { WordDetector } from '../../util/word_detector';
-import { bannedZoomlinksGroupremoved1 } from './banned_zoomlinks';
+import { bannedZoomlinks603 } from './banned_zoomlinks';
 // import { arraysEqual } from '../util/array_utils';
 import { getDates } from '../../util/util';
 
@@ -14,8 +14,8 @@ export function zoomlinkBusinessProcessNormal(
 ): any {
   const canvas = new LegacyCanvasClient(apiUrl, apiKey);
 
-  if (canvas.group === 'removedgroup1') {
-    const detector = new WordDetector(bannedZoomlinksGroupremoved1);
+  if (canvas.group === '603') {
+    const detector = new WordDetector(bannedZoomlinks603);
     const zoomlinkstList = zoomlinks.filter((a) => !detector.detectsWords(a));
     // if (!arraysEqual(zoomlinks, zoomlinkstList)) {
     return zoomlinkstList;
@@ -24,14 +24,14 @@ export function zoomlinkBusinessProcessNormal(
     // switch (event.getDay()) {
     // case 1:
     // case 3:
-    //   if (courseId === canvas.getCourseIdFromShortName('removedsubjectcode')) {
-    //     zoomlinkstList.push('removedzoomlink1');
+    //   if (courseId === canvas.getCourseIdFromShortName('sem6_art_and_culture')) {
+    //     zoomlinkstList.push('https://itesm.zoom.us/j/6366890099');
     //     return zoomlinkstList;
     //   }
     // case 2:
     // case 4:
-    //   if (courseId === canvas.getCourseIdFromShortName('removedsubjectcode')) {
-    //     zoomlinkstList.push('removedzoomlink2');
+    //   if (courseId === canvas.getCourseIdFromShortName('sem6_philosophy')) {
+    //     zoomlinkstList.push('https://tecmilenio.zoom.us/j/6660078001');
     //   }
     // }
   }
@@ -65,13 +65,14 @@ export function zoomlinkBusinessProcessExtra(
       case 1:
       case 3:
         if (
-          courseId === canvas.getCourseIdFromShortName('removedsubjectcode') &&
-          canvas.group === 'removedgroup'
+          courseId ===
+            canvas.getCourseIdFromShortName('sem6_art_and_culture') &&
+          canvas.group === '603'
         ) {
           const newZobject = {
-            courseName: 'removedsubject',
+            courseName: 'Art and culture',
             date,
-            url: 'removedzoomlink',
+            url: 'https://itesm.zoom.us/j/6366890099',
             group: canvas.group,
           };
           zobjects.push(newZobject);
@@ -80,13 +81,13 @@ export function zoomlinkBusinessProcessExtra(
       case 2:
       case 4:
         if (
-          courseId === canvas.getCourseIdFromShortName('removedsubjectcode') &&
-          canvas.group === 'removedgroup'
+          courseId === canvas.getCourseIdFromShortName('sem6_philosophy') &&
+          canvas.group === '603'
         ) {
           const newZobject = {
-            courseName: 'removedsubject',
+            courseName: 'Pensamiento filosófico',
             date,
-            url: 'removedzoomlink',
+            url: 'https://tecmilenio.zoom.us/j/6660078001',
             group: canvas.group,
           };
           zobjects.push(newZobject);

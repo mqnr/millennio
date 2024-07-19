@@ -1,8 +1,8 @@
 import { scheduleJob } from 'node-schedule';
 import { getGroupById, MillennioGroup } from './groups';
 import { StateManager } from '../../util/state_manager';
-import { changeCurrentEvent } from '../removedschool/change_current_event';
-import { eventNotify } from '../removedschool/event_notify';
+import { changeCurrentEvent } from '../tecmi/change_current_event';
+import { eventNotify } from '../tecmi/event_notify';
 import { AnnouncementManager } from '../canvas/announcements_manager';
 import * as log from '../../util/logging';
 
@@ -20,43 +20,19 @@ function setEvent(
   channelId?: any,
   roleMention?: string
 ): void {
-  scheduleJob({ rule: cronstring, tz: 'removedtimezone' }, () => {
+  scheduleJob({ rule: cronstring, tz: 'America/Hermosillo' }, () => {
     switch (startModifier) {
-      case '-removedgroup1-1':
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedsubjectcode1',
-          group,
-          force
-        );
+      case '-603-1':
+        changeCurrentEvent(client, manager, 'sem6_optative', group, force);
         break;
-      case '-removedgroup1-2':
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedsubjectcode2',
-          group,
-          force
-        );
+      case '-603-2':
+        changeCurrentEvent(client, manager, 'sem6_philosophy', group, force);
         break;
-      case '-removedgroup2-1':
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedsubjectcode3',
-          group,
-          force
-        );
+      case '-604-1':
+        changeCurrentEvent(client, manager, 'sem6_optative', group, force);
         break;
-      case '-removedgroup2-2':
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedsubjectcode4',
-          group,
-          force
-        );
+      case '-604-2':
+        changeCurrentEvent(client, manager, 'sem6_calculus', group, force);
         break;
       default:
         changeCurrentEvent(client, manager, event, group, force);
@@ -89,7 +65,7 @@ export function setAnnouncementWatcher(
     log.error(client, e);
   }
 
-  scheduleJob({ rule: cronstring, tz: 'removedtimezone' }, () => {
+  scheduleJob({ rule: cronstring, tz: 'America/Hermosillo' }, () => {
     if (announcementManagerGroup.canvas_channel_id) {
       try {
         announcementManager.refresh();
@@ -133,23 +109,11 @@ async function checkInTime(client: any): Promise<void> {
       case 5:
         log.info(
           client,
-          'In time: class status changed to "hasn\'t started" for groups removedgroup1 and removedgroup2'
+          'In time: class status changed to "hasn\'t started" for groups 603 and 604'
         );
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedeventcode',
-          'removedgroup1',
-          false
-        );
+        changeCurrentEvent(client, manager, 'hasnt_started', '603', false);
         await sleep(5000);
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedeventcode',
-          'removedgroup2',
-          false
-        );
+        changeCurrentEvent(client, manager, 'hasnt_started', '604', false);
 
         break;
       default:
@@ -164,15 +128,9 @@ async function checkInTime(client: any): Promise<void> {
       case 3:
         log.info(
           client,
-          'In time: class status changed to "hasn\'t started" for group removedgroup2'
+          'In time: class status changed to "hasn\'t started" for group 604'
         );
-        changeCurrentEvent(
-          client,
-          manager,
-          'removedeventcode',
-          'removedgroup2',
-          false
-        );
+        changeCurrentEvent(client, manager, 'hasnt_started', '604', false);
 
         break;
       default:
@@ -184,26 +142,73 @@ async function checkInTime(client: any): Promise<void> {
 export function scheduleEvents(client: any): void {
   checkInTime(client);
 
-  let groupRemovedgroup1: MillennioGroup;
-  let groupRemovedgroup2: MillennioGroup;
+  let group603: MillennioGroup;
+  let group604: MillennioGroup;
   try {
-    groupRemovedgroup1 = getGroupById('removedgroup1');
+    group603 = getGroupById('603');
   } catch (e) {
     throw new Error(e);
   }
 
   try {
-    groupRemovedgroup2 = getGroupById('removedgroup2');
+    group604 = getGroupById('604');
   } catch (e) {
     throw new Error(e);
   }
 
-  const classesRemovedgroup1 = new Map([['00 00 * * 1', 'removedschedule']]);
+  const classes603 = new Map([
+    ['00 00 * * 1-5', 'hasnt_started-DONTSEND'], // Mon Tue Wed Thu Fri 00:00 - Hasn't started
+    ['50 6 * * 1,3,5', 'day_started-603-1'], // Mon Wed Fri 06:50 - Comienzo del día escolar
+    ['57 6 * * 1,3,5', 'sem6_optative'], // Mon Wed Fri 06:57 - Optativa
+    ['27 8 * * 1', 'sem6_art_and_culture'], // Mon 08:27 - Art and culture
+    ['57 9 * * 1', 'sem6_mexico'], // Mon 09:57 - México en el siglo XXI
+    ['27 11 * * 1', 'sem6_habilidades'], // Mon 11:27 - Habilidades y valores VI
+    ['00 14 * * 1', 'day_ended'], // Mon Fri 14:00 - Se termina el día
+    ['50 6 * * 2,4', 'day_started-603-2'], // Tue Thu 06:50 - Comienzo del día escolar
+    ['27 11 * * 1', 'sem6_habilidades'], // Mon 11:27 - Habilidades y valores VI
+    ['57 6 * * 2,4', 'sem6_philosophy'], // Tue Thu 06:57 - Pensamiento filosófico
+    ['30 9 * * 2', 'recess'], // Tue 09:30 - Receso
+    ['57 09 * * 2,4', 'sem6_vocation'], // Tue Thu 09:57 - Plan vocacional
+    ['57 10 * * 2,4', 'sem6_calculus'], // Tue Thu 10:57 - Cálculo integral
+    ['30 13 * * 2', 'day_ended'], // Tue 13:30 - Se termina el día
+    ['27 8 * * 3,5', 'sem6_science'], // Wed Fri 08:27 - Scientific thought
+    ['00 10 * * 3,5', 'recess'], // Wed Fri 10:00 - Receso
+    ['27 10 * * 3', 'sem6_art_and_culture'], // Wed 10:27 - Art and culture
+    ['00 12 * * 3', 'day_ended'], // Wed 12:00 - Se termina el día
+    ['00 9 * * 4', 'recess'], // Thu 09:00 - Receso
+    ['00 13 * * 4', 'day_ended'], // Tue 13:00 - Se termina el día
+    ['27 10 * * 5', 'sem6_mexico'], // Fri 10:27 - México en el siglo XXI
+    ['57 11 * * 5', 'sem6_habilidades'], // Fri 11:57 - Habilidades y valores VI
+    ['00 14 * * 5', 'FORCE-weekend'], // Fri 14:00 - Empieza el fin de semana
+  ]);
 
-  const classesRemovedgroup2 = new Map([['00 00 * * 1', 'removedschedule']]);
+  const classes604 = new Map([
+    ['01 00 * * 1-5', 'hasnt_started-DONTSEND'], // Mon Tue Wed Thu Fri 00:00 - Hasn't started
+    ['49 6 * * 1,3,5', 'day_started-604-1'], // Mon Wed Fri 06:49 - Comienzo del día escolar
+    ['56 6 * * 1,3,5', 'sem6_optative'], // Mon Wed Fri 06:56 - Optativa
+    ['26 8 * * 1', 'sem6_habilidades'], // Mon 08:26 - Habilidades y valores VI
+    ['26 10 * * 1,5', 'sem6_mexico'], // Mon Fri 10:26 - México en el siglo XXI
+    ['59 11 * * 1', 'day_ended'], // Mon 11:59 - Se termina el día
+    ['49 6 * * 2,4', 'day_started-604-2'], // Tue Thu 06:49 - Comienzo del día escolar
+    ['56 6 * * 2,4', 'sem6_calculus'], // Tue Thu 06:56 - Cálculo integral
+    ['29 9 * * 2', 'recess'], // Tue 09:29 - Receso
+    ['56 09 * * 2,4', 'sem6_vocation'], // Tue Thu 09:56 - Plan vocacional
+    ['56 10 * * 2,4', 'sem6_philosophy'], // Tue Thu 10:56 - Plan vocacional
+    ['29 13 * * 2', 'day_ended'], // Tue 13:29 - Se termina el día
+    ['26 8 * * 3', 'sem6_art_and_culture'], // Wed 08:26 - Art and culture
+    ['56 09 * * 3,5', 'recess'], // Wed 09:56 - Receso
+    ['26 10 * * 3', 'sem6_science'], // Wed 10:26 - Scientific thought
+    ['56 11 * * 3', 'sem6_habilidades'], // Wed 11:56 - Habilidades y valores VI
+    ['29 14 * * 3', 'day_ended'], // Wed 14:29 - Se termina el día
+    ['56 8 * * 4', 'recess'], // Thu 08:56 - Receso
+    ['56 12 * * 4', 'day_ended'], // Thu 12:56 - Se termina el día
+    ['26 8 * * 5', 'sem6_art_and_culture'], // Fri 08:26 - Art and culture
+    ['56 11 * * 5', 'sem6_science'], // Fri 11:56 - Scientific thought
+    ['29 13 * * 5', 'FORCE-weekend'], // Fri 13:29 - Empieza el fin de semana
+  ]);
 
-  const groups = [groupRemovedgroup1, groupRemovedgroup2];
-  const maps = [classesRemovedgroup1, classesRemovedgroup2];
+  const groups = [group603, group604];
+  const maps = [classes603, classes604];
 
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const i in maps) {
@@ -222,10 +227,10 @@ export function scheduleEvents(client: any): void {
       }
       let startModifier: string = '';
       if (
-        value.endsWith('-removedgroup1-1') ||
-        value.endsWith('-removedgroup1-2') ||
-        value.endsWith('-removedgroup2-1') ||
-        value.endsWith('-removedgroup2-2')
+        value.endsWith('-603-1') ||
+        value.endsWith('-603-2') ||
+        value.endsWith('-604-1') ||
+        value.endsWith('-604-2')
       ) {
         startModifier = value.slice(-6);
         // eslint-disable-next-line no-param-reassign

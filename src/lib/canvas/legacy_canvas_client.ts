@@ -1,5 +1,5 @@
 import { XMLHttpRequest } from 'xmlhttprequest-ts';
-import { ConfigManager } from '../../util/config_manager';
+import { ConfigManager } from '../util/config_manager';
 
 const config = new ConfigManager();
 
@@ -10,14 +10,14 @@ export class LegacyCanvasClient {
 
   constructor(urlOrGroup: string, token?: string) {
     if (!token) {
-      if (urlOrGroup === 'removedgroup1' || urlOrGroup === 'removedgroup2') {
+      if (urlOrGroup === '603' || urlOrGroup === '604') {
         this.group = urlOrGroup;
-        if (urlOrGroup === 'removedgroup1') {
+        if (urlOrGroup === '603') {
           this.apiUrl = config.school.canvas_base_url;
-          this.apiKey = config.secrets.canvasTokenRemovedgroup1;
-        } else if (urlOrGroup === 'removedgroup2') {
+          this.apiKey = config.secrets.canvasToken603;
+        } else if (urlOrGroup === '604') {
           this.apiUrl = config.school.canvas_base_url;
-          this.apiKey = config.secrets.canvasTokenRemovedgroup2;
+          this.apiKey = config.secrets.canvasToken604;
         } else {
           throw new Error(`Invalid group ${urlOrGroup}`);
         }
@@ -25,10 +25,10 @@ export class LegacyCanvasClient {
     } else {
       this.apiUrl = urlOrGroup;
       this.apiKey = token;
-      if (token === config.secrets.canvasTokenRemovedgroup1) {
-        this.group = 'removedgroup1';
-      } else if (token === config.secrets.canvasTokenRemovedgroup2) {
-        this.group = 'removedgroup2';
+      if (token === config.secrets.canvasToken603) {
+        this.group = '603';
+      } else if (token === config.secrets.canvasToken604) {
+        this.group = '604';
       } else {
         throw new Error('Unknown Canvas token');
       }
@@ -37,39 +37,39 @@ export class LegacyCanvasClient {
 
   getCourseIdFromShortName(courseShortName: string): string {
     switch (this.group) {
-      case 'removedgroup1':
+      case '603':
         switch (courseShortName) {
-          case 'removedsubjectcode1':
-            return 'removedid1';
-          case 'removedsubjectcode2':
-            return 'removedid2';
-          case 'removedsubjectcode3':
-            return 'removedid3';
-          case 'removedsubjectcode4':
-            return 'removedid4';
-          case 'removedsubjectcode5':
-            return 'removedid5';
-          case 'removedsubjectcode6':
-            return 'removedid6';
+          case 'sem6_art_and_culture':
+            return '90032';
+          case 'sem6_calculus':
+            return '90058';
+          case 'sem6_habilidades':
+            return '90001';
+          case 'sem6_mexico':
+            return '90037';
+          case 'sem6_philosophy':
+            return '90044';
+          case 'sem6_science':
+            return '90017';
           default:
             throw new Error(
               `Invalid course short name for group ${this.group}: ${courseShortName}`
             );
         }
-      case 'removedgroup2':
+      case '604':
         switch (courseShortName) {
-          case 'removedsubjectcode1':
-            return 'removedid1';
-          case 'removedsubjectcode2':
-            return 'removedid2';
-          case 'removedsubjectcode3':
-            return 'removedid3';
-          case 'removedsubjectcode4':
-            return 'removedid4';
-          case 'removedsubjectcode5':
-            return 'removedid5';
-          case 'removedsubjectcode6':
-            return 'removedid6';
+          case 'sem6_art_and_culture':
+            return '90036';
+          case 'sem6_calculus':
+            return '90060';
+          case 'sem6_habilidades':
+            return '90007';
+          case 'sem6_mexico':
+            return '89968';
+          case 'sem6_philosophy':
+            return '90048';
+          case 'sem6_science':
+            return '90023';
           default:
             throw new Error(
               `Invalid course short name for group ${this.group}: ${courseShortName}`
@@ -84,28 +84,28 @@ export class LegacyCanvasClient {
 
   validateCourseId(course: string): void {
     switch (this.group) {
-      case 'removedgroup1':
+      case '603':
         switch (course) {
-          case 'removedid1':
-          case 'removedid2':
-          case 'removedid3':
-          case 'removedid4':
-          case 'removedid5':
-          case 'removedid6':
+          case '90032':
+          case '90058':
+          case '90001':
+          case '90037':
+          case '90044':
+          case '90017':
             return;
           default:
             throw new Error(
               `Invalid course ID for group ${this.group}: ${course}`
             );
         }
-      case 'removedgroup2':
+      case '604':
         switch (course) {
-          case 'removedid1':
-          case 'removedid2':
-          case 'removedid3':
-          case 'removedid4':
-          case 'removedid5':
-          case 'removedid6':
+          case '90036':
+          case '90060':
+          case '90007':
+          case '89968':
+          case '90048':
+          case '90023':
             return;
           default:
             throw new Error(

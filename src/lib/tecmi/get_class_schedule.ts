@@ -1,8 +1,9 @@
 import * as log from '../../util/logging';
 import { StateManager } from '../../util/state_manager';
 
-const horarioRemovedgroup1ClasesUrl = 'removedurl1';
-const horarioRemovedgroup2ClasesUrl = 'removedurl2';
+const horario603ClasesUrl =
+  'https://cdn.discordapp.com/attachments/878026734056898580/932081367196500068/unknown.png';
+const horario604ClasesUrl = 'https://e-pixel.github.io/chart.jpg';
 
 const horarioSemestreUrl =
   'De momento, no se cuenta con un horario para el semestre.';
@@ -19,10 +20,10 @@ export function getClassScheduleUrl(
       return horarioSemestreUrl;
   }
 
-  if (group === 'removedgroup1') {
+  if (group === '603') {
     switch (context) {
       case 'clases':
-        return horarioRemovedgroup1ClasesUrl;
+        return horario603ClasesUrl;
       default:
         log.notify(
           client,
@@ -30,10 +31,10 @@ export function getClassScheduleUrl(
         );
         return 'State error.';
     }
-  } else if (group === 'removedgroup2') {
+  } else if (group === '604') {
     switch (context) {
       case 'clases':
-        return horarioRemovedgroup2ClasesUrl;
+        return horario604ClasesUrl;
       default:
         log.notify(
           client,

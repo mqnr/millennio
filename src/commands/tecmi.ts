@@ -2,10 +2,10 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, DMChannel } from 'discord.js';
 import { MillennioCommand } from '../lib/core/command';
 import { Replier } from '../lib/core/sender_replier';
-import { getClassScheduleUrl } from '../lib/removedschool/get_class_schedule';
-import { changeCurrentEvent } from '../lib/removedschool/change_current_event';
+import { getClassScheduleUrl } from '../lib/tecmi/get_class_schedule';
+import { changeCurrentEvent } from '../lib/tecmi/change_current_event';
 import { StateManager } from '../util/state_manager';
-import { ZoomlinkResolverGetterFormatter } from '../lib/removedschool/super_zoomlink';
+import { ZoomlinkResolverGetterFormatter } from '../lib/tecmi/super_zoomlink';
 import { ConfigManager } from '../util/config_manager';
 import * as log from '../util/logging';
 import { expandEventName } from '../lib/school/expand_event_name';
@@ -14,8 +14,8 @@ import { getGroupByGuildId, getGroupByMemberId } from '../lib/school/groups';
 const config = new ConfigManager();
 
 const cmdData = new SlashCommandBuilder()
-  .setName('removedschool')
-  .setDescription('Varias utilidades informacionales de removedschool.')
+  .setName('tecmi')
+  .setDescription('Varias utilidades informacionales de Tecmilenio.')
   .addSubcommand((subcommand) =>
     subcommand
       .setName('horario')
@@ -32,8 +32,8 @@ const cmdData = new SlashCommandBuilder()
         option
           .setName('grupo')
           .setDescription('El grupo de la clase que se quiere.')
-          .addChoice('removedgroup1', 'removedgroup1')
-          .addChoice('removedgroup2', 'removedgroup2')
+          .addChoice('603', '603')
+          .addChoice('604', '604')
       )
   )
   .addSubcommand((subcommand) =>
@@ -44,20 +44,20 @@ const cmdData = new SlashCommandBuilder()
         option
           .setName('clase')
           .setDescription('El link de clase que se quiere.')
-          .addChoice('removedsubject1', 'removedsubjectcode1')
-          .addChoice('removedsubject2', 'removedsubjectcode2')
-          .addChoice('removedsubject3', 'removedsubjectcode3')
-          .addChoice('removedsubject4', 'removedsubjectcode4')
-          .addChoice('removedsubject5', 'removedsubjectcode5')
-          .addChoice('removedsubject6', 'removedsubjectcode6')
-          .addChoice('removedevent', 'removedeventcode')
+          .addChoice('Art and culture', 'sem6_art_and_culture')
+          .addChoice('Cálculo integral', 'sem6_calculus')
+          .addChoice('Habilidades y valores VI', 'sem6_habilidades')
+          .addChoice('México en el siglo XXI', 'sem6_mexico')
+          .addChoice('Pensamiento filosófico', 'sem6_philosophy')
+          .addChoice('Scientific thought', 'sem6_science')
+          .addChoice('ESPECIAL: Optativa', 'sem6_optative')
       )
       .addStringOption((option) =>
         option
           .setName('grupo')
           .setDescription('El grupo de la clase que se quiere.')
-          .addChoice('removedgroup1', 'removedgroup1')
-          .addChoice('removedgroup2', 'removedgroup2')
+          .addChoice('603', '603')
+          .addChoice('604', '604')
       )
       .addStringOption((option) =>
         option
@@ -82,8 +82,8 @@ const cmdData = new SlashCommandBuilder()
         option
           .setName('grupo')
           .setDescription('El grupo del cual la clase actual se quiere.')
-          .addChoice('removedgroup1', 'removedgroup1')
-          .addChoice('removedgroup2', 'removedgroup2')
+          .addChoice('603', '603')
+          .addChoice('604', '604')
       )
   )
   .addSubcommand((subcommand) =>
@@ -94,33 +94,33 @@ const cmdData = new SlashCommandBuilder()
         option
           .setName('evento')
           .setDescription('El estado al que se quiere cambiar.')
-          .addChoice('removedsubject1', 'removedsubjectcode1')
-          .addChoice('removedsubject2', 'removedsubjectcode2')
-          .addChoice('removedsubject3', 'removedsubjectcode3')
-          .addChoice('removedsubject4', 'removedsubjectcode4')
-          .addChoice('removedsubject5', 'removedsubjectcode5')
-          .addChoice('removedsubject6', 'removedsubjectcode6')
-          .addChoice('removedevent1', 'removedeventcode1')
-          .addChoice('removedevent2', 'removedeventcode2')
-          .addChoice('removedevent3', 'removedeventcode3')
-          .addChoice('removedevent4', 'removedeventcode4')
-          .addChoice('removedevent5', 'removedeventcode5')
-          .addChoice('removedevent6', 'removedeventcode6')
+          .addChoice('Art and culture', 'sem6_art_and_culture')
+          .addChoice('Cálculo integral', 'sem6_calculus')
+          .addChoice('Habilidades y valores VI', 'sem6_habilidades')
+          .addChoice('México en el siglo XXI', 'sem6_mexico')
+          .addChoice('Pensamiento filosófico', 'sem6_philosophy')
+          .addChoice('Scientific thought', 'sem6_science')
+          .addChoice('ESPECIAL: Optativa', 'sem6_optative')
+          .addChoice('ESPECIAL: Plan vocacional', 'sem6_vocation')
+          .addChoice('ESPECIAL: Día sin empezar', 'hasnt_started')
+          .addChoice('ESPECIAL: Día terminado', 'day_ended')
+          .addChoice('ESPECIAL: Fin de semana', 'weekend')
+          .addChoice('ESPECIAL: Receso', 'recess')
           .setRequired(true)
       )
       .addStringOption((option) =>
         option
           .setName('grupo')
           .setDescription('El grupo cuyo evento se quiere cambiar.')
-          .addChoice('removedgroup1', 'removedgroup1')
-          .addChoice('removedgroup2', 'removedgroup2')
+          .addChoice('603', '603')
+          .addChoice('604', '604')
       )
   )
   .addSubcommand((subcommand) =>
     subcommand
       .setName('cambiar-texto-examenes')
       .setDescription(
-        'Comando de administrador: cambia el texto de /removedschool horario contexto:Exámenes.'
+        'Comando de administrador: cambia el texto de /tecmi horario contexto:Exámenes.'
       )
       .addStringOption((option) =>
         option
@@ -138,7 +138,7 @@ const cmdExecuter = async (i: CommandInteraction) => {
     if (i.channel instanceof DMChannel) {
       log.notify(
         i.client,
-        `COMMAND "${i.commandName}" EXECUTED BY DM BY NON-removedschool USER. OFFENDING USER TAG: ${i.user.tag} - OFFENDING USER ID: ${i.user.id}`
+        `COMMAND "${i.commandName}" EXECUTED BY DM BY NON-TECMILENIO USER. OFFENDING USER TAG: ${i.user.tag} - OFFENDING USER ID: ${i.user.id}`
       );
       return i.reply(
         "You haven't been cleared to use this bot. This incident will be reported."
@@ -151,7 +151,7 @@ const cmdExecuter = async (i: CommandInteraction) => {
       if (err.message.includes('no group with guild ID')) {
         log.notify(
           i.client,
-          `COMMAND "${i.commandName}" EXECUTED OUTSIDE OF A removedschool GUILD. OFFENDING GUILD ID: ${i.guildId}`
+          `COMMAND "${i.commandName}" EXECUTED OUTSIDE OF A TECMILENIO GUILD. OFFENDING GUILD ID: ${i.guildId}`
         );
       } else {
         log.error(i.client, err);
@@ -190,10 +190,10 @@ const cmdExecuter = async (i: CommandInteraction) => {
         errorEnder = ` para el grupo ${group}`;
       }
 
-      if (courseShortName === 'removedeventcode') {
+      if (courseShortName === 'sem6_optative') {
         return replier.editReply(
-          'removedschool link response',
-          '- [removedevent1](removedzoomlink1)\n- [removedevent2](removedzoomlink2)\n- [removedevent3](removedzoomlink3)\n- [removedevent4](removedzoomlink4)\n- [removedevent5](removedzoomlink5)'
+          'Tecmi link response',
+          '- [Bienestar integral](https://tecmilenio.zoom.us/j/87188501102)\n- [Ciencia y tecnología para el desarrollo](https://tecmilenio.zoom.us/j/87695764858)\n- [Escenarios mundiales](https://itesm.zoom.us/j/94066380747)\n- [Negocios éxitosos](https://tecmilenio.zoom.us/j/89541920269)\n- [Sistemas de la información para la competitividad](https://tecmilenio.zoom.us/j/88246037114)'
         );
       }
 
@@ -202,7 +202,7 @@ const cmdExecuter = async (i: CommandInteraction) => {
       zget
         .getResolveAndFormatZoomlinks(courseShortName, startDate, endDate)
         .then((response) => {
-          const errorTitle = 'removedschool link error';
+          const errorTitle = 'Tecmi link error';
           if (response.shouldNotifyOfNoClass) {
             return replier.editReply(
               errorTitle,
@@ -211,32 +211,32 @@ const cmdExecuter = async (i: CommandInteraction) => {
           }
           if (response.isSpecial) {
             switch (response.event) {
-              case 'removedeventcode1':
+              case 'sem6_optative':
                 return replier.editReply(
-                  'removedschool link response',
-                  '- [removedevent1](removedzoomlink1)\n- [removedevent2](removedzoomlink2)\n- [removedevent3](removedzoomlink3)\n- [removedevent4](removedzoomlink4)\n- [removedevent5](removedzoomlink5)'
+                  'Tecmi link response',
+                  '- [Bienestar integral](https://tecmilenio.zoom.us/j/87188501102)\n- [Ciencia y tecnología para el desarrollo](https://tecmilenio.zoom.us/j/87695764858)\n- [Escenarios mundiales](https://itesm.zoom.us/j/94066380747)\n- [Negocios éxitosos](https://tecmilenio.zoom.us/j/89541920269)\n- [Sistemas de la información para la competitividad](https://tecmilenio.zoom.us/j/88246037114)'
                 );
-              case 'removedeventcode2':
+              case 'sem6_vocation':
                 return replier.editReply(
                   errorTitle,
                   'Plan vocacional está en curso.'
                 );
-              case 'removedeventcode3':
+              case 'hasnt_started':
                 return replier.editReply(
                   errorTitle,
                   `El día escolar no ha empezado todavía${errorEnder}.`
                 );
-              case 'removedeventcode4':
+              case 'day_ended':
                 return replier.editReply(
                   errorTitle,
                   `El día escolar ha terminado${errorEnder}.`
                 );
-              case 'removedeventcode5':
+              case 'weekend':
                 return replier.editReply(
                   errorTitle,
                   `Actualmente, es fin de semana.`
                 );
-              case 'removedeventcode6':
+              case 'recess':
                 return replier.editReply(
                   errorTitle,
                   `El receso está en curso${errorEnder}.`
@@ -252,10 +252,7 @@ const cmdExecuter = async (i: CommandInteraction) => {
                 );
             }
           } else {
-            return replier.editReply(
-              'removedschool link response',
-              response.message
-            );
+            return replier.editReply('Tecmi link response', response.message);
           }
         })
         .catch((e) => {
@@ -263,20 +260,20 @@ const cmdExecuter = async (i: CommandInteraction) => {
           if (e.includes('No calendar events for course')) {
             log.debug(e);
             return replier.editReply(
-              'removedschool link error',
+              'Tecmi link error',
               `No se encontaron eventos del calendario para esa clase.`
             );
           }
           if (e.includes('Invalid date or invalid datetime for')) {
             log.debug(e);
             return replier.editReply(
-              'removedschool link error',
+              'Tecmi link error',
               'Has introducido una fecha inválida para la fecha de inicio o la fecha de fin. El formato correcto es el siguiente: `yyyy-MM-dd`.'
             );
           }
           log.error(i.client, e);
           return replier.editReply(
-            'removedschool link error',
+            'Tecmi link error',
             `Received the following error:\n**${e}**`
           );
         });
@@ -329,16 +326,16 @@ const cmdExecuter = async (i: CommandInteraction) => {
 
       if (
         i.user.id !== config.bot.owner_id &&
-        i.user.id !== config.school.removedname_id
+        i.user.id !== config.school.andres_id
       ) {
         return replier.editReply(
-          'removedschool change-status response',
+          'Tecmi change-status response',
           'Lo siento, no tienes suficientes permisos para hacer eso.'
         );
       }
-      if (group === 'removedgroup' && i.user.id !== config.bot.owner_id) {
+      if (group === '603' && i.user.id !== config.bot.owner_id) {
         return replier.editReply(
-          'removedschool change-status response',
+          'Tecmi change-status response',
           'Lo siento, no tienes suficientes permisos para hacer eso.'
         );
       }
@@ -356,12 +353,12 @@ const cmdExecuter = async (i: CommandInteraction) => {
         eventName = expandEventName(eventShortName);
       } catch (e) {
         return replier.editReply(
-          'removedschool change-class error',
+          'Tecmi change-class error',
           `Command returned the following error:\n**${e}**`
         );
       }
       return replier.editReply(
-        'removedschool change-class response',
+        'Tecmi change-class response',
         `Clase cambiada a **${eventName}**${ender}.`
       );
     }
@@ -372,7 +369,7 @@ const cmdExecuter = async (i: CommandInteraction) => {
       const obj = { string: text };
       await manager.edit(obj);
       return replier.editReply(
-        'removedschool cambiar-texto-examenes response',
+        'Tecmi cambiar-texto-examenes response',
         `Text changed from:\n\`\`\`${prevText}\`\`\`\nto:\n\`\`\`${text}\`\`\``
       );
     }

@@ -20,13 +20,13 @@ const cmdData = new SlashCommandBuilder()
         option
           .setName('target')
           .setDescription('La clase que se quiere.')
-          .addChoice('removedsubject1', 'removedsubjectcode1')
-          .addChoice('removedsubject2', 'removedsubjectcode2')
-          .addChoice('removedsubject3', 'removedsubjectcode3')
-          .addChoice('removedsubject4', 'removedsubjectcode4')
-          .addChoice('removedsubject5', 'removedsubjectcode5')
-          .addChoice('removedsubject6', 'removedsubjectcode6')
-          .addChoice('removedschool-wide', 'all')
+          .addChoice('Art and culture', 'sem6_art_and_culture')
+          .addChoice('Cálculo integral', 'sem6_calculus')
+          .addChoice('Habilidades y valores VI', 'sem6_habilidades')
+          .addChoice('México en el siglo XXI', 'sem6_mexico')
+          .addChoice('Pensamiento filosófico', 'sem6_philosophy')
+          .addChoice('Scientific thought', 'sem6_science')
+          .addChoice('Tecmi-wide', 'all')
           .setRequired(true)
       )
       .addStringOption((subcomandante) =>
@@ -41,8 +41,8 @@ const cmdData = new SlashCommandBuilder()
         option
           .setName('grupo')
           .setDescription('El grupo para el cual se quiere la información.')
-          .addChoice('removedgroup1', 'removedgroup1')
-          .addChoice('removedgroup2', 'removedgroup2')
+          .addChoice('603', '603')
+          .addChoice('604', '604')
       )
   );
 
@@ -54,7 +54,7 @@ const cmdExecuter = async (interaction: CommandInteraction) => {
     if (interaction.channel instanceof DMChannel) {
       log.notify(
         interaction.client,
-        `COMMAND "${interaction.commandName}" EXECUTED BY DM BY NON-removedschool USER. OFFENDING USER TAG: ${interaction.user.tag} - OFFENDING USER ID: ${interaction.user.id}`
+        `COMMAND "${interaction.commandName}" EXECUTED BY DM BY NON-TECMILENIO USER. OFFENDING USER TAG: ${interaction.user.tag} - OFFENDING USER ID: ${interaction.user.id}`
       );
       return interaction.reply(
         "You haven't been cleared to use this bot. This incident will be reported."
@@ -67,7 +67,7 @@ const cmdExecuter = async (interaction: CommandInteraction) => {
       if (err.message.includes('no group with guild ID')) {
         log.notify(
           interaction.client,
-          `COMMAND "${interaction.commandName}" EXECUTED OUTSIDE OF A removedschool GUILD. OFFENDING GUILD ID: ${interaction.guildId}`
+          `COMMAND "${interaction.commandName}" EXECUTED OUTSIDE OF A TECMILENIO GUILD. OFFENDING GUILD ID: ${interaction.guildId}`
         );
       } else {
         log.error(interaction.client, err);
@@ -94,7 +94,7 @@ const cmdExecuter = async (interaction: CommandInteraction) => {
       try {
         courseId =
           targetCourse === 'all'
-            ? 'removedcourseid'
+            ? '25689'
             : canvas.getCourseIdFromShortName(targetCourse);
       } catch (e) {
         log.notify(

@@ -13,7 +13,7 @@ export default class ReadyEvent extends MillennioEvent {
 
   static async execute(client: MillennioClient) {
     scheduleEvents(client);
-    setAnnouncementWatcher(client, 'removedgroup', '*/15 * * * * *');
+    setAnnouncementWatcher(client, '603', '*/15 * * * * *');
     log.notify(client, `Ready. Logged in as ${client.user.tag}`);
   }
 }
