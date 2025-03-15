@@ -18,7 +18,7 @@ When first pushing this to GitHub back in 2022, I stripped out all names that co
 ## Installation
 
 ```
-git clone https://github.com/mzacuna/millennio.git
+git clone https://github.com/mqnr/millennio.git
 cd millennio
 npm install
 npm run build
